@@ -17,16 +17,17 @@ namespace Indexer
         {
             get
             {
-                for (int i = 0; i < namelist.Count; i++)
+                var isOk = namelist.Where(a => a == name).FirstOrDefault();
+                if (isOk != null)
                 {
-                    if (namelist[i] == name)
-                    {
-                        return i + 1;
-                    }
-                }
-                return 0;
+                    return namelist.IndexOf(isOk) + 1;
+                }else return 0;
             }
+           
+
+            
         }
+
 
     }
 }
