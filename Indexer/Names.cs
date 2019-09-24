@@ -13,7 +13,20 @@ namespace Indexer
         {
             namelist.Add(name);
         }
-        public 
+        public int this[string name]
+        {
+            get
+            {
+                for (int i = 0; i < namelist.Count; i++)
+                {
+                    if (namelist[i] == name)
+                    {
+                        return i + 1;
+                    }
+                }
+                return 0;
+            }
+        }
 
     }
 }
