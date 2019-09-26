@@ -74,27 +74,78 @@ namespace Indexer
             //Console.WriteLine(min);
             //Console.WriteLine(max);
 
-            var users = new List<WareHouser>();
-            XDocument document = XDocument.Load("XMLFile1.xml");
-            List<XElement> elements = document.Element("root").Elements().ToList();
-            elements.ForEach(e =>
-            {
-                var user = new WareHouser
-                {
-                    Id = e.Attribute("Id").Value,
-                    Name = e.Attribute("Name").Value,
-                    Password = e.Attribute("Password").Value,
-                    Role = e.Attribute("Role").Value
-                };
-                users.Add(user);
-            });
+            var users = getUsers();// lista do czego rzutujemy
+            //users.ForEach(a => Add(new WareHouser
+            //{
+                
+            //    Name = "Test",
+            //    Password = "Ka!@#2",
+            //    Role = "Tester"
 
+            //}));
+
+          
+
+            
+
+         
+            for (int i = 0; i < 1000; i++)
+            {
+                Delete(i);
+            }
+           
             users.ForEach(a => Console.WriteLine(a));
             Console.Read();
+        }
+
+        private static List<WareHouser> getUsers()
+        {
+            var users = new List<WareHouser>();
+            XDocument document = XDocument.Load("XMLFile1.xml");//
+            return
+                document
+                .Element("root")
+                .Elements()
+                .Select(e => new WareHouser
+                {
+                    Id = int.Parse(e.Attribute(nameof(WareHouser.Id)).Value),// use nameoff
+                    Name = e.Attribute(nameof(WareHouser.Name)).Value,
+                    Role = e.Attribute("Role").Value,
+                    Password = e.Attribute("Password").Value,
+
+                })
+                .ToList();//
+
+
+        }
+        private static void Add(WareHouser item)
+        {
+            int ID = GetLastID() ?? 0;
+            XDocument document = XDocument.Load("XMLFile1.xml");
+            XElement element = new XElement("User",
+                new XAttribute(nameof(WareHouser.Id), ID + 1),
+                new XAttribute(nameof(WareHouser.Name), item.Name),
+                new XAttribute(nameof(WareHouser.Role), item.Role),
+                new XAttribute(nameof(WareHouser.Password), item.Password));
+            document.Element("root").Add(element);
+            document.Save("XMLFile1.xml");
+        }
+
+        private static bool Delete(int id)
+        {
+            XDocument document = XDocument.Load("XMLFile1.xml");
+            var user = getUsers();
+            document.Root.Elements().Where(a => a.Attribute("Id").Value == id.ToString()).Remove();
+            
+          
+            return true;
 
         }
 
-
+        private static int? GetLastID()
+        {
+            return getUsers().Count != 0 ? getUsers().Max(a => a.Id) : 0;
+        }
 
 
 
@@ -117,7 +168,7 @@ namespace Indexer
                 Id = 2,
                 Name = "Dog",
                 CountryId = 1
-            
+
 
             });
 
